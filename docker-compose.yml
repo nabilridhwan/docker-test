@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+
+  api:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3001
+    expose:
+      - 3001
+    ports: 
+      - "3001:3001"
+    restart: always
+    depends_on:
+      - postgresql
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  postgresql:
+    image: postgres:latest
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5430:5432"
+    expose:
+      - 5430
+      - 5432
